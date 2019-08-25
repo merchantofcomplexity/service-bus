@@ -56,6 +56,7 @@ class Envelope
         if ($this->actionEvent) {
             return $this->actionEvent;
         }
+
         throw new RuntimeException("Envelope has not been initialized");
     }
 
@@ -96,6 +97,10 @@ class Envelope
      */
     public function message()
     {
+        if ($this->actionEvent) {
+            return $this->actionEvent->message();
+        }
+
         return $this->message;
     }
 
