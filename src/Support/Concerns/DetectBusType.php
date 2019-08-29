@@ -17,11 +17,11 @@ trait DetectBusType
     protected function detectBusType(Message $message): string
     {
         switch ($message) {
-            case  $message instanceof Command:
+            case $message instanceof Command:
                 return CommandBus::class;
-            case  $message instanceof Query:
+            case $message instanceof Query:
                 return QueryBus::class;
-            case  $message instanceof DomainEvent:
+            case $message instanceof DomainEvent:
                 return EventBus::class;
         }
 
