@@ -5,10 +5,11 @@ namespace MerchantOfComplexity\ServiceBus\Middleware;
 
 use MerchantOfComplexity\ServiceBus\Envelope;
 use MerchantOfComplexity\ServiceBus\Support\Concerns\DetectMessageName;
+use MerchantOfComplexity\ServiceBus\Support\Contracts\Bus\Middleware;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-final class MessageLogging
+final class MessageLogging implements Middleware
 {
     use DetectMessageName;
 

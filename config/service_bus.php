@@ -1,6 +1,6 @@
 <?php
 
-use MerchantOfComplexity\Messaging\Factory\NoOpMessageConverter;
+use MerchantOfComplexity\ServiceBus\Async\IlluminateMessageProducer;
 use MerchantOfComplexity\ServiceBus\CommandBus;
 use MerchantOfComplexity\ServiceBus\EventBus;
 use MerchantOfComplexity\ServiceBus\Middleware\MessageLogging;
@@ -10,9 +10,6 @@ use MerchantOfComplexity\ServiceBus\Middleware\Route\CommandRoute;
 use MerchantOfComplexity\ServiceBus\Middleware\Route\EventRoute;
 use MerchantOfComplexity\ServiceBus\Middleware\Route\QueryRoute;
 use MerchantOfComplexity\ServiceBus\QueryBus;
-use MerchantOfComplexity\ServiceBus\Router\CommandRouter;
-use MerchantOfComplexity\ServiceBus\Router\EventRouter;
-use MerchantOfComplexity\ServiceBus\Router\QueryRouter;
 use MerchantOfComplexity\ServiceBus\Support\Container\IlluminateContainer;
 use MerchantOfComplexity\ServiceBus\Support\Events\DetectMessageNameSubscriber;
 use MerchantOfComplexity\ServiceBus\Support\Events\DispatchedEvent;
@@ -27,40 +24,46 @@ return [
 
     'moc' => [
 
-        'bus' => [
+        'message' => [
 
-            'message' => [
-                'converter' => NoOpMessageConverter::class,
-
-                'producer' => '',
-
-                'route_strategy' => 'defer_only_marked_async',
-
-                'handler' => [
-                    'allow_null' => false,
-                    'to_callable' => false,
-                    'resolver' => IlluminateContainer::class
-                ]
+            'producer' => [
+                'service' => IlluminateMessageProducer::class,
+                'connection' => null,
+                'queue' => null,
             ],
 
-            'tracker' => [
-                'service' => DefaultTracker::class,
+            'route_strategy' => 'defer_only_marked_async',
 
+            'handler' => [
+                'allow_null' => false,
+                'to_callable' => false,
+                'resolver' => IlluminateContainer::class,
                 'events' => [
-                    'named' => [
-                        DispatchedEvent::class,
-                        FinalizedEvent::class,
-                    ],
-
-                    'subscribers' => [
-                        DetectMessageNameSubscriber::class,
-                        ExceptionSubscriber::class,
-                        FQCNMessageSubscriber::class,
-                        InitializedSubscriber::class,
-                        MessageValidatorSubscriber::class
-                    ]
+                    // push events handlers to event map
+                    // override in each config
                 ]
             ],
+
+            'is_exception_collectible' => false
+        ],
+
+        'tracker' => [
+            'service' => DefaultTracker::class,
+
+            'events' => [
+                'named' => [
+                    DispatchedEvent::class,
+                    FinalizedEvent::class,
+                ],
+
+                'subscribers' => [
+                    DetectMessageNameSubscriber::class,
+                    FQCNMessageSubscriber::class,
+                    InitializedSubscriber::class,
+                    MessageValidatorSubscriber::class,
+                    ExceptionSubscriber::class,
+                ]
+            ]
         ],
 
         'middleware' => [
@@ -72,45 +75,44 @@ return [
         'buses' => [
 
             'command' => [
-                'service_bus' => CommandBus::class,
-                'middleware' => [],
-                'route' => CommandRoute::class,
-                'router' => CommandRouter::class,
-                'routes' => [
 
-                ]
+                'default' => [
+                    'service_bus' => CommandBus::class,
+                    'route_middleware' => CommandRoute::class,
+                    'map' => []
+                ],
+
             ],
 
             'event' => [
-                'service_bus' => EventBus::class,
-                'middleware' => [],
-                'route' => EventRoute::class,
-                'router' => EventRouter::class,
-                'message' => [
-                    'handler' => [
-                        'allow_null' => true,
-                        'to_callable' => 'onEvent'
-                    ]
-                ],
-                'routes' => [
 
-                ]
+                'default' => [
+                    'service_bus' => EventBus::class,
+                    'route_middleware' => EventRoute::class,
+                    'message' => [
+                        'handler' => [
+                            'allow_null' => true,
+                            'to_callable' => 'onEvent'
+                        ],
+                        'is_exception_collectible' => true
+
+                    ],
+                    'map' => [],
+                ],
+
             ],
 
             'query' => [
-                'service_bus' => QueryBus::class,
-                'middleware' => [],
-                'route' => QueryRoute::class,
-                'router' => QueryRouter::class,
-                'message' => [
-                    'handler' => [
-                        'allow_null' => true,
-                        'to_callable' => 'query'
-                    ]
+                'default' => [
+                    'service_bus' => QueryBus::class,
+                    'route_middleware' => QueryRoute::class,
+                    'message' => [
+                        'handler' => [
+                            'to_callable' => 'query'
+                        ]
+                    ],
+                    'map' => [],
                 ],
-                'routes' => [
-
-                ]
             ],
         ]
     ]

@@ -11,7 +11,7 @@ interface MessageRouteStrategy
 
     public const DEFER_ALL_ASYNC = 'defer_all_async';
     public const DEFER_NONE_ASYNC = 'defer_none_async';
-    public const DEFER_ONLY_MARKED_ASYNC = 'defer_only_async';
+    public const DEFER_ONLY_MARKED_ASYNC = 'defer_only_marked_async';
 
     public function shouldBeDeferred(Message $message): ?Message;
 
