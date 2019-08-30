@@ -30,7 +30,6 @@ final class IlluminateMessageProducer implements MessageProducer
         $this->queue = $queue;
     }
 
-
     public function __invoke(Message $message): void
     {
         $message = $this->messageConverter->convertToArray($message);

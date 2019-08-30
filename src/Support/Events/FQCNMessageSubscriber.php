@@ -32,7 +32,7 @@ final class FQCNMessageSubscriber implements SubscribedEvent
 
     public function applyTo(): callable
     {
-        return function (ActionEvent $event) {
+        return function (ActionEvent $event): void {
             $message = $event->message();
 
             if (is_array($message) && array_key_exists(self::MESSAGE_NAME_KEY, $message)) {

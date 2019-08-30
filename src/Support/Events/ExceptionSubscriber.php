@@ -21,7 +21,7 @@ final class ExceptionSubscriber implements SubscribedEvent
 
     public function applyTo(): callable
     {
-        return function (ActionEvent $event) {
+        return function (ActionEvent $event): void {
             if ($exception = $event->exception()) {
                 throw $exception;
             }

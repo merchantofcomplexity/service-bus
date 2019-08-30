@@ -22,6 +22,7 @@ abstract class DeferMessageAsync implements MessageRouteStrategy
      *
      * @param Message $message
      * @return Message
+     * @throws InvalidServiceBus
      */
     protected function markMessageAsync(Message $message): Message
     {
@@ -36,6 +37,10 @@ abstract class DeferMessageAsync implements MessageRouteStrategy
         return $message;
     }
 
+    /**
+     * @param Message $message
+     * @return bool
+     */
     protected function isNotPreviouslyMarkedAsync(Message $message): bool
     {
         return false === ($message->metadata()[self::ASYNC_METADATA_KEY] ?? false);

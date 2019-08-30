@@ -24,7 +24,7 @@ final class DetectMessageNameSubscriber implements SubscribedEvent
 
     public function applyTo(): callable
     {
-        return function (ActionEvent $event) {
+        return function (ActionEvent $event): void {
             $event->setMessageName(
                 $this->detectMessageName($event->message())
             );
