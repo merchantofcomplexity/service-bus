@@ -5,6 +5,11 @@ namespace MerchantOfComplexity\ServiceBus\Exception;
 
 class InvalidServiceBus extends RuntimeException
 {
+    public static function messageNotFound(string $messageName): self
+    {
+        return new self("Message name $messageName not found in route map");
+    }
+
     public static function invalidMessageHandlerType(string $messageName, string $messageType): self
     {
         $message = "Message handler for message name $messageName ";

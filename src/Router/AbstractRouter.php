@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace MerchantOfComplexity\ServiceBus\Router;
 
+use Illuminate\Container\EntryNotFoundException;
 use MerchantOfComplexity\ServiceBus\Exception\InvalidServiceBus;
-use MerchantOfComplexity\ServiceBus\Exception\RuntimeException;
 use MerchantOfComplexity\ServiceBus\Support\Contracts\Bus\Router;
 use Psr\Container\ContainerInterface;
 use function gettype;
@@ -27,7 +27,7 @@ abstract class AbstractRouter implements Router
     public function route(string $messageName): iterable
     {
         if (!isset($this->map[$messageName])) {
-            throw new RuntimeException("Message name $messageName not found in route map");
+            throw InvalidServiceBus::messageNotFound($messageName);
         }
 
         $messageHandler = $this->map[$messageName];
@@ -54,6 +54,7 @@ abstract class AbstractRouter implements Router
      * @param string $messageName
      * @param $messageHandler
      * @return object
+     * @throws EntryNotFoundException
      */
     protected function resolveMessageHandler(string $messageName, $messageHandler): object
     {
@@ -62,11 +63,15 @@ abstract class AbstractRouter implements Router
         }
 
         if (is_string($messageHandler)) {
-            if ($this->container) {
-                return $this->container->get($messageHandler);
+            if (!$this->container) {
+                throw InvalidServiceBus::invalidContainer($messageHandler, $messageName);
             }
 
-            throw InvalidServiceBus::invalidContainer($messageHandler, $messageName);
+            if (!$this->container->has($messageHandler)) {
+                throw new EntryNotFoundException("Service $messageHandler not found in container");
+            }
+
+            return $this->container->get($messageHandler);
         }
 
         return $messageHandler;
