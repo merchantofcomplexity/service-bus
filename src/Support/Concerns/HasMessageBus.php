@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace MerchantOfComplexity\ServiceBus\Support\Concerns;
 
 use MerchantOfComplexity\ServiceBus\Envelope;
+use MerchantOfComplexity\Tracker\Contracts\Event;
+use MerchantOfComplexity\Tracker\Contracts\SubscribedEvent;
 use MerchantOfComplexity\Tracker\Contracts\Tracker;
 
 trait HasMessageBus
@@ -49,5 +51,15 @@ trait HasMessageBus
                 $this->nextMiddleware($index + 1, $currentEnvelope)
             );
         };
+    }
+
+    public function subscribe(Event $event): Event
+    {
+        return $this->tracker->subscribe($event);
+    }
+
+    public function unsubscribe(SubscribedEvent $event): bool
+    {
+        return $this->tracker->unsubscribe($event);
     }
 }

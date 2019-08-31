@@ -270,25 +270,19 @@ abstract class ServiceBusManager implements BaseServiceBusManager
     {
         $tracker = $this->fromConfig("tracker.service");
 
-        if ($this->app->bound($tracker)) {
-            return $tracker;
-        }
-
         $events = array_merge(
             $this->fromConfig("tracker.events.named"),
             $this->fromConfig("tracker.events.subscribers")
         );
 
         /** @var Tracker $tracker */
-        $tracker = $this->app->make($tracker);
+        $tracker = clone $this->app->make($tracker);
 
         foreach ($events as $event) {
             $tracker->subscribe(
                 $this->app->make($event)
             );
         }
-
-        $this->app->instance(Tracker::class, $tracker);
 
         return $tracker;
     }
