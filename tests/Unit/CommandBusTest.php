@@ -113,7 +113,7 @@ class CommandBusTest extends TestCase
      * @expectedException RuntimeException
      * @expectedExceptionMessage Router handler MerchantOfComplexity\ServiceBus\Router\SingleHandlerRouter can route to one handler only for message name foo
      */
-    public function it_raise_exception_if_multiple_message_handlers(): void
+    public function it_raise_exception_if_multiple_message_handlers_has_been_set(): void
     {
         $bus = new CommandBus($this->defaultMiddleware(['foo' => ['bar', 'foo_bar']]), $this->defaultTracker());
 
