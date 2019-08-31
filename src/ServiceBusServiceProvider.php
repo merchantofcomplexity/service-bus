@@ -24,9 +24,10 @@ class ServiceBusServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom($this->getConfigPath(), 'service_bus');
 
-        $this->app->singleton(ServiceBusManager::class, function (Application $app): ServiceBusManager {
-            return new DefaultBusManager($app, $app->get('config')->get('service_bus'));
-        });
+        $this->app->singleton(ServiceBusManager::class,
+            function (Application $app): ServiceBusManager {
+                return new DefaultBusManager($app, $app->get('config')->get('service_bus'));
+            });
     }
 
     protected function getConfigPath(): string

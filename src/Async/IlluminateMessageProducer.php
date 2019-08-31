@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace MerchantOfComplexity\ServiceBus\Async;
 
 use Illuminate\Contracts\Bus\QueueingDispatcher;
-use Illuminate\Contracts\Queue\Queue;
 use MerchantOfComplexity\Messaging\Contracts\Message;
 use MerchantOfComplexity\Messaging\Contracts\MessageConverter;
 use MerchantOfComplexity\ServiceBus\Support\Contracts\Message\MessageProducer;

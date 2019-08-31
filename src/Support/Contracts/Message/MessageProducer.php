@@ -8,6 +8,8 @@ use MerchantOfComplexity\Messaging\Contracts\Message;
 interface MessageProducer
 {
     /**
+     * Produce message async
+     *
      * @param Message $message
      */
     public function __invoke(Message $message): void;

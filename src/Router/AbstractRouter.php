@@ -48,6 +48,13 @@ abstract class AbstractRouter implements Router
         return $this->determineMessageHandler($messageName, $messageHandler);
     }
 
+    /**
+     * @param string $messageName
+     * @param array $messageHandler
+     * @return iterable
+     * @throws InvalidServiceBus
+     * @throws EntryNotFoundException
+     */
     abstract protected function determineMessageHandler(string $messageName, array $messageHandler): iterable;
 
     /**

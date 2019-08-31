@@ -7,5 +7,10 @@ use MerchantOfComplexity\Messaging\Contracts\Message;
 
 interface ValidateMessage extends Message
 {
+    /**
+     * Illuminate validation rules
+     *
+     * @return array
+     */
     public function getValidationRules(): array;
 }

@@ -9,6 +9,8 @@ use Throwable;
 trait PromiseHandler
 {
     /**
+     * Handle promise
+     *
      * @param PromiseInterface $promise
      * @param bool $raiseException
      * @return mixed

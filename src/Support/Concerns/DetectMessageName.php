@@ -7,6 +7,12 @@ use MerchantOfComplexity\Messaging\Contracts\HasMessageName;
 
 trait DetectMessageName
 {
+    /**
+     * Detect message name
+     *
+     * @param $message
+     * @return string
+     */
     protected function detectMessageName($message): string
     {
         if ($message instanceof HasMessageName) {
