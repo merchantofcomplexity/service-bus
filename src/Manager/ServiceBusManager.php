@@ -79,7 +79,7 @@ abstract class ServiceBusManager implements BaseServiceBusManager
 
         return new $serviceBusClass(
             $this->buildMiddleware($name, $type, $busConfig),
-            $this->registerTracker()
+            $this->registerTracker($busConfig)
         );
     }
 
@@ -266,14 +266,22 @@ abstract class ServiceBusManager implements BaseServiceBusManager
         throw new RuntimeException("Unable to load bus router instance");
     }
 
-    public function registerTracker(): Tracker
+    public function registerTracker(array $busConfig): Tracker
     {
         $tracker = $this->fromConfig("tracker.service");
+
+        if ($busTracker = Arr::get($busConfig, "tracker.service")) {
+            $tracker = $busTracker;
+        }
 
         $events = array_merge(
             $this->fromConfig("tracker.events.named"),
             $this->fromConfig("tracker.events.subscribers")
         );
+
+        if ($busEvents = Arr::get($busConfig, "tracker.events", [])) {
+            $events = array_merge($events, Arr::collapse($busEvents));
+        }
 
         /** @var Tracker $tracker */
         $tracker = clone $this->app->make($tracker);
