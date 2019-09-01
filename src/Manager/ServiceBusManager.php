@@ -280,7 +280,7 @@ abstract class ServiceBusManager implements BaseServiceBusManager
         );
 
         if ($busEvents = Arr::get($busConfig, "tracker.events", [])) {
-            $events = array_merge($events, Arr::collapse($busEvents));
+            $events = array_merge($events, Arr::flatten($busEvents));
         }
 
         /** @var Tracker $tracker */
