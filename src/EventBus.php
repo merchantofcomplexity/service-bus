@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace MerchantOfComplexity\ServiceBus;
 
 use MerchantOfComplexity\ServiceBus\Support\Concerns\HasMessageBus;
-use MerchantOfComplexity\ServiceBus\Support\Contracts\Bus\Messager;
+use MerchantOfComplexity\ServiceBus\Support\Contracts\Bus\MessageTracker;
 
-class EventBus implements Messager
+class EventBus implements MessageTracker
 {
     use HasMessageBus;
 

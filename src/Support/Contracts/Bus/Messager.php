@@ -15,20 +15,4 @@ interface Messager
      * @return mixed
      */
     public function dispatch($message);
-
-    /**
-     * Subscribe to bus tracker
-     *
-     * @param Event $event
-     * @return Event
-     */
-    public function subscribe(Event $event): Event;
-
-    /**
-     * Unsubscribe to bus tracker
-     *
-     * @param SubscribedEvent $event
-     * @return bool
-     */
-    public function unsubscribe(SubscribedEvent $event): bool;
 }
