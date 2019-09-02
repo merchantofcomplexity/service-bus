@@ -18,6 +18,9 @@ use MerchantOfComplexity\ServiceBus\Support\Events\DispatchedEvent;
 use MerchantOfComplexity\ServiceBus\Support\Events\ExceptionSubscriber;
 use MerchantOfComplexity\ServiceBus\Support\Events\FinalizedEvent;
 use MerchantOfComplexity\ServiceBus\Support\Events\FQCNMessageSubscriber;
+use MerchantOfComplexity\Tracker\Contracts\ActionEvent;
+use MerchantOfComplexity\Tracker\Contracts\NamedEvent;
+use MerchantOfComplexity\Tracker\Contracts\SubscribedEvent;
 use MerchantOfComplexity\Tracker\Contracts\Tracker;
 use MerchantOfComplexity\Tracker\DefaultTracker;
 use MerchantOfComplexityTest\ServiceBus\TestCase;
@@ -82,6 +85,58 @@ class CommandBusTest extends TestCase
         $bus = new CommandBus($this->defaultMiddleware($map, $container), $this->defaultTracker());
 
         $bus->dispatch('foo');
+    }
+
+    /**
+     * @test
+     */
+    public function it_subscribe_to_bus_tracker(): void
+    {
+        $command = new class() extends Command
+        {
+            use HasPayloadConstructor;
+        };
+
+        $commandClass = get_class($command);
+
+        $map = [
+            $commandClass => function ($receivedCommand) use ($command) {
+            },
+        ];
+
+        $testCase = $this;
+        $subscriber = new class($testCase, $commandClass) implements SubscribedEvent{
+            private $testCase;
+            private string $commandClass;
+
+            public function __construct($testCase, string $commandClass)
+            {
+                $this->testCase = $testCase;
+                $this->commandClass = $commandClass;
+            }
+
+            public function priority(): int
+            {
+               return 100000;
+            }
+
+            public function subscribeTo(): NamedEvent
+            {
+               return new DispatchedEvent();
+            }
+
+            public function applyTo(): callable
+            {
+                return function(ActionEvent $event): void{
+                    $this->testCase->assertEquals($event->messageName(), $this->commandClass);
+                };
+            }
+        };
+
+        $bus = new CommandBus($this->defaultMiddleware($map), $this->defaultTracker());
+        $bus->subscribe($subscriber);
+
+        $bus->dispatch($command);
     }
 
     /**
