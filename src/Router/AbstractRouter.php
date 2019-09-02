@@ -49,6 +49,8 @@ abstract class AbstractRouter implements Router
     }
 
     /**
+     * Determine Message handler in map
+     *
      * @param string $messageName
      * @param array $messageHandler
      * @return iterable
@@ -58,6 +60,8 @@ abstract class AbstractRouter implements Router
     abstract protected function determineMessageHandler(string $messageName, array $messageHandler): iterable;
 
     /**
+     * Resolve message handler
+     *
      * @param string $messageName
      * @param $messageHandler
      * @return object
@@ -85,6 +89,8 @@ abstract class AbstractRouter implements Router
     }
 
     /**
+     * Check message handler type is supported
+     *
      * @param $messageHandler
      * @return bool
      */

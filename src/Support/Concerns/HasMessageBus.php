@@ -19,6 +19,16 @@ trait HasMessageBus
         $this->tracker = $tracker;
     }
 
+    public function subscribe(Event $event): Event
+    {
+        return $this->tracker->subscribe($event);
+    }
+
+    public function unsubscribe(SubscribedEvent $event): bool
+    {
+        return $this->tracker->unsubscribe($event);
+    }
+
     protected function dispatchForBus(string $busType, $message)
     {
         $envelope = new Envelope($this->tracker, $busType, $message);
@@ -51,15 +61,5 @@ trait HasMessageBus
                 $this->nextMiddleware($index + 1, $currentEnvelope)
             );
         };
-    }
-
-    public function subscribe(Event $event): Event
-    {
-        return $this->tracker->subscribe($event);
-    }
-
-    public function unsubscribe(SubscribedEvent $event): bool
-    {
-        return $this->tracker->unsubscribe($event);
     }
 }

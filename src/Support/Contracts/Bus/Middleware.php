@@ -9,6 +9,8 @@ use MerchantOfComplexity\ServiceBus\Envelope;
 interface Middleware
 {
     /**
+     * Handle envelope stack
+     *
      * @param Envelope $envelope
      * @param callable $next
      * @return Closure|Envelope
