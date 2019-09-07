@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace MerchantOfComplexity\ServiceBus\Async;
 
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Queue\Queue;
 use MerchantOfComplexity\ServiceBus\Support\Contracts\Bus\Messager;
-use Psr\Container\ContainerInterface;
 
 class MessageJob
 {
@@ -31,10 +31,10 @@ class MessageJob
         $queue->pushOn($this->queue, $command);
     }
 
-    public function handle(ContainerInterface $container): void
+    public function handle(Container $container): void
     {
         /** @var Messager $serviceBus */
-        $serviceBus = $container->get($this->busType);
+        $serviceBus = $container->make($this->busType);
 
         $serviceBus->dispatch($this->payload);
     }
