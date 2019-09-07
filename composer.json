@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.4",
+        "laravel/framework": "6.0.*",
         "merchantofcomplexity/tracker": "dev-master",
         "merchantofcomplexity/messaging": "dev-master",
         "react/promise": "^2.7.1",
@@ -18,7 +19,6 @@
         "ramsey/uuid": "^3.8"
     },
     "require-dev": {
-        "laravel/framework": "5.8.*",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
