@@ -30,6 +30,11 @@ class Envelope
         $this->message = $message;
     }
 
+    /**
+     * @param mixed $target
+     * @param callable|null $callback
+     * @return ActionEvent
+     */
     public function initialize($target = null, callable $callback = null): ActionEvent
     {
         if (!$this->actionEvent) {
@@ -60,16 +65,26 @@ class Envelope
         throw new RuntimeException("Envelope has not been initialized");
     }
 
+    /**
+     * Mark message received
+     */
     public function markMessageReceived(): void
     {
         $this->actionEvent->setMessageHandled(true);
     }
 
+    /**
+     * @return bool
+     */
     public function hasReceipt(): bool
     {
         return $this->actionEvent->isMessageHandled();
     }
 
+    /**
+     * @param $message
+     * @return Envelope
+     */
     public function wrap($message): Envelope
     {
         if ($message instanceof self) {
@@ -104,6 +119,11 @@ class Envelope
         return $this->message;
     }
 
+    /**
+     * Message name
+     *
+     * @return string
+     */
     public function messageName(): string
     {
         if ($this->actionEvent) {
@@ -113,26 +133,41 @@ class Envelope
         return $this->detectMessageName($this->message);
     }
 
+    /**
+     * @return Tracker
+     */
     public function tracker(): Tracker
     {
         return $this->tracker;
     }
 
+    /**
+     * @return ActionEvent|null
+     */
     public function actionEvent(): ?ActionEvent
     {
         return $this->actionEvent;
     }
 
+    /**
+     * @return string
+     */
     public function busType(): string
     {
         return $this->busType;
     }
 
+    /**
+     * @param PromiseInterface $promise
+     */
     public function setPromise(PromiseInterface $promise): void
     {
         $this->promise = $promise;
     }
 
+    /**
+     * @return PromiseInterface|null
+     */
     public function promise(): ?PromiseInterface
     {
         return $this->promise;
